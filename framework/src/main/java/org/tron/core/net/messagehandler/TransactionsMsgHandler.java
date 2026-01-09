@@ -68,6 +68,7 @@ public class TransactionsMsgHandler implements TronMsgHandler {
 
   @Override
   public void processMessage(PeerConnection peer, TronMessage msg) throws P2pException {
+    logger.info("### processTrx {} from {}", new TransactionMessage(trx).getMessageId(), peer.getInetAddress());
     TransactionsMessage transactionsMessage = (TransactionsMessage) msg;
     check(peer, transactionsMessage);
     for (Transaction trx : transactionsMessage.getTransactions().getTransactionsList()) {
@@ -100,6 +101,7 @@ public class TransactionsMsgHandler implements TronMsgHandler {
 
   private void check(PeerConnection peer, TransactionsMessage msg) throws P2pException {
     for (Transaction trx : msg.getTransactions().getTransactionsList()) {
+      logger.info("### checkTrx {} from {}", new TransactionMessage(trx).getMessageId(), peer.getInetAddress());
       Item item = new Item(new TransactionMessage(trx).getMessageId(), InventoryType.TRX);
       if (!peer.getAdvInvRequest().containsKey(item)) {
         throw new P2pException(TypeEnum.BAD_MESSAGE,
